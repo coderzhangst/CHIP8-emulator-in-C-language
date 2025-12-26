@@ -1,9 +1,8 @@
 #include "header.h"
 #define _CRT_SECURE_NO_WARNINGS
-#define RAM_SIZE (0xFFF-0+1) //4KB
+#define RAM_SIZE (0xFFF-0+1) //4KB,chip8's standard
 int  main(int argc, char* argv[])
 {
-	
 	if (argc == 1)
 	{
 		printf("Usage: CHIP8.exe YourFilePath");
@@ -18,6 +17,7 @@ int  main(int argc, char* argv[])
 	init_cpu_and_devices(); 
 	load_chip8_fontset(memory);
 #ifdef DEBUG
+	//print some debug infos
 	getchar();
 	beep();
 	print_rom_memory(memory,rom_size,argv[1]);
@@ -26,16 +26,18 @@ int  main(int argc, char* argv[])
 #endif
 	while (1)
 	{
+		//press esc to quit
 		if (KEY_PRESS(VK_ESCAPE))
 			break;
 
 		set_key_state();
 		emulate_cycle(memory);
+		//two register
 		DT--;
 		ST--;
 	}
 	free(memory);
-	fflush(stdin); //Çå¿Õ stdin »º³åÇø
+	fflush(stdin); //æ¸…ç©º stdin ç¼“å†²åŒº(clean stdin buffer)
 	system("cls");
 	printf("Quit...");
 	Sleep(500);
